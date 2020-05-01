@@ -543,7 +543,9 @@ class SecretStr:
 
     @classmethod
     def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
-        field_schema.update(type='string', writeOnly=True, format='password', minLength=cls.min_length, maxLength=cls.max_length)
+        field_schema.update(
+            type='string', writeOnly=True, format='password', minLength=cls.min_length, maxLength=cls.max_length
+        )
 
     @classmethod
     def __get_validators__(cls) -> 'CallableGenerator':

@@ -45,12 +45,13 @@ from .types import (
     ConstrainedInt,
     ConstrainedList,
     ConstrainedStr,
+    SecretStr,
     conbytes,
     condecimal,
     confloat,
     conint,
     conlist,
-    constr, SecretStr,
+    constr,
 )
 from .typing import ForwardRef, Literal, is_callable_type, is_literal_type, literal_values
 from .utils import get_model, lenient_issubclass, sequence_like
@@ -776,7 +777,9 @@ def get_annotation_from_field_info(annotation: Any, field_info: FieldInfo, field
         attrs: Optional[Tuple[str, ...]] = None
         constraint_func: Optional[Callable[..., type]] = None
         if isinstance(type_, type):
-            if (issubclass(type_, str) or issubclass(type_, SecretStr)) and not issubclass(type_, (EmailStr, AnyUrl, ConstrainedStr)):
+            if (issubclass(type_, str) or issubclass(type_, SecretStr)) and not issubclass(
+                type_, (EmailStr, AnyUrl, ConstrainedStr)
+            ):
                 attrs = ('max_length', 'min_length', 'regex')
                 constraint_func = constr
             elif issubclass(type_, bytes):
