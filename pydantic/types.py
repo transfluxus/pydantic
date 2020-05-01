@@ -557,8 +557,10 @@ class SecretStr:
         value = str_validator(value)
         return cls(value)
 
-    def __init__(self, value: str):
+    def __init__(self, value: str, *, min_length: OptionalInt = None, max_length: OptionalInt = None):
         self._secret_value = value
+        self.min_length = min_length
+        self.max_length = max_length
 
     def __repr__(self) -> str:
         return f"SecretStr('{self}')"
