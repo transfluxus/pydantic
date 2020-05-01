@@ -538,13 +538,17 @@ class Json(metaclass=JsonMeta):
 
 
 class SecretStr:
+    min_length: OptionalInt = None
+    max_length: OptionalInt = None
+
     @classmethod
     def __modify_schema__(cls, field_schema: Dict[str, Any]) -> None:
-        field_schema.update(type='string', writeOnly=True, format='password')
+        field_schema.update(type='string', writeOnly=True, format='password', minLength=cls.min_length, maxLength=cls.max_length)
 
     @classmethod
     def __get_validators__(cls) -> 'CallableGenerator':
         yield cls.validate
+        yield constr_length_validator
 
     @classmethod
     def validate(cls, value: Any) -> 'SecretStr':
@@ -564,6 +568,9 @@ class SecretStr:
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, SecretStr) and self.get_secret_value() == other.get_secret_value()
+
+    def __len__(self) -> int:
+        return len(self._secret_value)
 
     def display(self) -> str:
         warnings.warn('`secret_str.display()` is deprecated, use `str(secret_str)` instead', DeprecationWarning)
